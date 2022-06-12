@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [[ -z "$1" ]]
+	then
+		echo "No package has been specified."
+elif [[ "$1" == "-R" ]]
+	then
+		sudo pacman -R $2 && echo Success! || echo Fail!
+
+elif [[ "$1" == "-Rscn" ]]
+	then
+		sudo pacman -Rscn $2 && echo Success! || echo Fail!
+else
+	git clone https://aur.archlinux.org/$1.git
+	if [[ -f "./$1/PKGBUILD" ]]
+		then
+			cd $1
+			makepkg -sic && echo Success! || echo Fail
+			cd ..
+			rm -rf $1
+	else
+		echo "There is no package called: $1"
+		rm -rf $1
+	fi
+fi
